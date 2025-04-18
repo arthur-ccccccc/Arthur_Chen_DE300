@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>HW1_Markdown.ipynb</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080; font-style: italic;}
+.s1 { color: #000000;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HW1_Markdown.ipynb</font>
+</center></td></tr></table>
+<pre><span class="s0">#%% md 
+</span>Note: this file is a direct copy of all Markdown cells of HW1.ipynb. It is best to check them in HW1.ipynb to get context of code and output. 
+<span class="s0">#%% md 
+</span>Question 1 
+<span class="s0">#%% md 
+</span>It seems like only North American Airlines has missing &quot;CARRIER&quot; field. By searching online, we know that it has an CARRIER code of &quot;NA&quot;. Hence, constant imputation is good here. One conjecture is that, the &quot;NA&quot; code was mixed with the na type and hence the codes are shown as missing. 
+<span class="s0">#%% md 
+</span>It turns out that only CARRIER L4 and OH have missing CARRIER_NAME. Now search if any other records in the data match 
+<span class="s0">#%% md 
+</span>We see all L4 code belongs to &quot;Lynx Aviation d/b/a Frontier Airlines&quot; so we can impute. However, two carriers share the code &quot;OH&quot;. As explained by the BTS data attributes page, this is possible. Hence we cannot decide what to fill and should leave blank. 
+ 
+<span class="s0">#%% md 
+</span>Since AIRLINE_ID and CARRIER/CARRIER_NAME should have a one to one mapping, we process in a similar way. 
+<span class="s0">#%% md 
+</span>Now we try to impute MANUFACTURE_YEAR, NUMBER_OF_SEATS, and CAPACITY_IN_POUNDS. It is very reasonable for the latter two to be same or very similar for every aircraft of the same model. Hence, we can use mean imputation after group by MODEL. Since each model could produce in a moderate time span, this might not be the perfect strategy for MANUFACTURE_YEAR but there is no better estimators available. Hence, we also apply the mean imputation to that. 
+ 
+GEN AI USE: ChatGPT-o4 
+&quot;I want to impute MANUFACTURE_YEAR, NUMBER_OF_SEATS, CAPACITY_IN_POUNDS with the model mean. i.e., calculate the mean of each values for the same MODEL.&quot; 
+ 
+In an initial version, after examining some filled data, I observed that in some cases &quot;0&quot; is filled. This is probably because such model never appear elsewhere in the dataset. In this case, we rather give up imputation. 
+ 
+&quot;For rows that we intend to impute, if we cannot find the corresponding model elsewhere in the dataset, we will not impute.&quot; 
+ 
+<span class="s0">#%% md 
+</span>It is strange that there are still 0's for the NUMBER_OF_SEATS. 
+<span class="s0">#%% md 
+</span>It turns out that it is common to have 0 as a placeholder for those MODEL where NUMBER_OF_SEATS are unknown. Hence we will leave it as that. 
+<span class="s0">#%% md 
+</span>Question 2 
+<span class="s0">#%% md 
+</span>There are too many alias for companies and it is impossible to manually combine all of them. Hence, I only try to merge two of the largest manufacturers, Boeing and Airbus. 
+<span class="s0">#%% md 
+</span>This is extremely complicated that I cannot make sure what are the same model and what are not. As one example, I standardized all trailing &quot;passenger/passengeronly&quot; to &quot;-PSGR&quot;. 
+ 
+GEN AI USE: ChatGPT-o4 
+&quot;For all model names, I want to change all trailing &quot;passenger&quot;/&quot;passengeronly&quot; (case insensitive) to &quot;-PSGR&quot;. Provide a regex pattern.&quot; 
+<span class="s0">#%% md 
+</span>From BTS, we code should be capital A, B, O. We firstly update all letters to be capital - however, we also see there are 122 instances of code L. I chose to remain it despite it does not appear on the explanation page. The case for OPERATING_STATUS is similar. 
+<span class="s0">#%% md 
+</span>Question 4 
+<span class="s0">#%% md 
+</span>As mentioned at the end of Question 1, both columns have a considerable number of 0 (which does not make sense), possibly as placeholders. In essence they can be treated as missing entries. To make the analysis of this question meaningful, we drop these rows as well. 
+<span class="s0">#%% md 
+</span>Since the procedure for two columns are identical, we process them together. 
+<span class="s0">#%% md 
+</span>We see that both seats and capacity were initially right skewed where capacity has a very high skewness. Skewness for both columns drop significantly after the boxcox transformation. However, They are far away from a perfect bell shape as some seats and capacity counts cluster at some certain number - for example, around 45-50 for seats before transformation - which makes sense as certain model might have a fixed number of seats/pounds of capacity. These traits will preserve even after the transformation. 
+<span class="s0">#%% md 
+</span>Question 5 
+<span class="s0">#%% md 
+</span>GEN AI USE: ChatGPT-o4 
+&quot;What is the best way to create a new column SIZE for my df depending on quantile of NUMBER_OF_SEATS where each quantile is named &quot;SMALL&quot;,&quot;MEDIUM&quot;,&quot;LARGE&quot;,&quot;XLARGE&quot;?&quot; 
+<span class="s0">#%% md 
+</span>For OPERATING_STATUS, all sizes have much more Y(Yes) than N(No). We see that LARGE and XLARGE have slightly more Y than the other two sizes (proportionally). 
+ 
+For AIRCRAFT_STATUS, the most significant trend is that larger sizes have more proportion of O(Owned). That is, larger aircraft are more likely to be owned than leased. 
+<span class="s0">#%% md 
+</span>GEN AI Disclosure have been included in the notebook where GEN AI was used.</pre>
+</body>
+</html>
